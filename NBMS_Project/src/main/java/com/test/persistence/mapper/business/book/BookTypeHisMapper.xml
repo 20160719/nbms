@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.persistence.mapper.business.book.BookTypeHisMapper">
+	<resultMap type="com.test.persistence.entity.business.book.BookTypeHis" id="booktypeResultMap">
+		<id property="bookTypeId" column="bookTypeId"/>
+		<result property="bookTypeName" column="bookTypeName"/>
+		<result property="bookNumbers" column="bookNumbers"/>
+	</resultMap>
+	
+	<sql id="booktype_sql">
+		bookTypeId,bookTypeName,bookNumbers
+	</sql>
+	
+	<select id="loadById" parameterType="String" resultMap="booktypeResultMap">
+		SELECT 
+		<include refid="booktype_sql"/>   
+		FROM booktype where bookTypeId=#{booktypeId}   
+	</select>
+</mapper>

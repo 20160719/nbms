@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.persistence.mapper.system.user.UserMapper">
+	
+	<!-- <![CDATA[ ((${page.index}-1)*(${page.size})),${page.size} ]]> -->
+	
+	<sql id="user_select_sql_1">
+		user.ACCOUNT    "account",
+		user.PASSWORD   "password",
+		user.USER_NAME  "userName",
+		user.USER_SEX   "userSex",
+		user.USER_AGE   "userAge",
+		user.BIRTHDAY   "birthday",
+		user.ADDRESS    "address",
+		user.USER_ID    "userId"
+	</sql>
+	
+	
+	
+	<select id="querys" parameterType="User" resultType="User">
+		 SELECT
+		 <include refid="user_select_sql_1"/> 
+		 FROM USER user WHERE 1=1 
+		  <if test="@com.test.system.util.ToolUtil@isNotBlank(record.account)">
+				AND user.ACCOUNT=#{record.account,jdbcType=VARCHAR}
+		 </if>
+		 <if test="@com.test.system.util.ToolUtil@isNotBlank(record.password)">
+				AND user.PASSWORD=#{record.password,jdbcType=VARCHAR}
+		 </if>
+		 <if test="@com.test.system.util.ToolUtil@isNotBlank(record.userId)">
+				AND user.USER_ID=#{record.userId,jdbcType=VARCHAR}
+		 </if>
+		 <if test="@com.test.system.util.ToolUtil@isNotBlank(record.userName)">
+			    AND user.USER_NAME=#{record.userName,jdbcType=VARCHAR}
+		 </if>
+		 <if test="@com.test.system.util.ToolUtil@isNotBlank(record.userSex)">
+			    AND user.USER_SEX=#{record.userSex,jdbcType=VARCHAR}
+		 </if>
+		 <if test="@com.test.system.util.ToolUtil@isNotBlank(record.userAge)">
+			    AND user.USER_AGE=#{record.userAge,jdbcType=VARCHAR}
+		 </if>
+		 <if test="@com.test.system.util.ToolUtil@isNotBlank(record.birthday)">
+			    AND user.BIRTHDAY=#{record.birthday,jdbcType=VARCHAR}
+		 </if>
+		 <if test="@com.test.system.util.ToolUtil@isNotBlank(record.address)">
+			    AND user.ADDRESS=#{record.address,jdbcType=VARCHAR}
+		 </if>
+	</select>
+
+	<select id="loadById" parameterType="java.lang.String" resultType="User">
+		SELECT 
+		<include refid="user_select_sql_1"/>  
+		FROM USER user WHERE user.USER_ID=#{objId, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="loadByAccount" parameterType="java.lang.String" resultType="User">
+		SELECT 
+		<include refid="user_select_sql_1"/>  
+		FROM USER user WHERE user.ACCOUNT=#{account, jdbcType=VARCHAR}
+	</select>
+	
+	<!-- 
+	<select id="queryBooksByUserId" parameterType="java.lang.Stirng" resultMap="resultBookMap">
+		
+	</select> 
+	-->
+	
+	<!-- 批量插入 -->
+	<insert id="creates" parameterType="java.util.List">
+	INSERT INTO USER(ACCOUNT,PASSWORD,USER_ID,USER_NAME,USER_SEX,USER_AGE,BIRTHDAY,ADDRESS) VALUES
+		<foreach collection="list" item="user" index="index" separator=",">
+			(#{user.account,jdbcType=VARCHAR},
+			 #{user.password,jdbcType=VARCHAR},
+			 #{user.userId,jdbcType=VARCHAR},
+			 #{user.userName,jdbcType=VARCHAR},
+			 #{user.userSex,jdbcType=VARCHAR},
+			 #{user.userAge,jdbcType=VARCHAR},
+			 #{user.birthday,jdbcType=VARCHAR},
+			 #{user.address,jdbcType=VARCHAR})
+		</foreach>
+	</insert>
+	
+	<!-- 批量更新 -->
+	<update id="modifys" parameterType="java.util.List">
+	   UPDATE BOOK 
+	   <trim prefix="SET" suffixOverrides=",">
+	   		<trim prefix="bookName=case" suffix="end,">
+	   			 <foreach collection="list" item="bk" index="index">
+	   			 	<if test="bk.bookName!=null and bk.bookName!=''">
+	   			 		WHEN bookId=#{bk.bookId} then #{bk.bookName,jdbcType=VARCHAR}
+	   			 	</if>
+	   			 </foreach>
+	   		</trim>
+	   		<trim prefix="bookAuthor=case" suffix="end,">
+	   			 <foreach collection="list" item="bk" index="index">
+	   			 	<if test="bk.bookAuthor!=null and bk.bookAuthor!=''">
+	   			 		WHEN bookId=#{bk.bookId} then #{bk.bookAuthor,jdbcType=VARCHAR}
+	   			 	</if>
+	   			 </foreach>
+	   		</trim>
+	   		<trim prefix="bookTypeId=case" suffix="end,">
+	   			 <foreach collection="list" item="bk" index="index">
+	   			 	<if test="bk.bookTypeId!=null and bk.bookTypeId!=''">
+	   			 		WHEN bookId=#{bk.bookId} then #{bk.bookTypeId,jdbcType=VARCHAR}
+	   			 	</if>
+	   			 </foreach>
+	   		</trim>
+	   		<trim prefix="bookImage=case" suffix="end,">
+	   			 <foreach collection="list" item="bk" index="index">
+	   			 	<if test="bk.bookImage!=null and bk.bookImage!=''">
+	   			 		WHEN bookId=#{bk.bookId} then #{bk.bookImage,jdbcType=VARCHAR}
+	   			 	</if>
+	   			 </foreach>
+	   		</trim>
+	   		<trim prefix="publicationTime=case" suffix="end,">
+	   			 <foreach collection="list" item="bk" index="index">
+	   			 	<if test="bk.publicationTime!=null and bk.publicationTime!=''">
+	   			 		WHEN bookId=#{bk.bookId} then #{bk.publicationTime,jdbcType=VARCHAR}
+	   			 	</if>
+	   			 </foreach>
+	   		</trim>
+	   </trim>
+	   WHERE bookId IN
+	   <foreach collection="list" item="bk" index="index" open="(" close=")" separator=",">
+           #{bk.bookId}
+       </foreach>
+	</update>
+	
+	<delete id="deletes" parameterType="java.util.List">
+		DELETE FROM BOOK WHERE 1=1 AND bookId IN
+		<foreach collection="list" index="index" item="it" open="(" close=")" separator=",">
+			#{it.bookId}
+		</foreach>
+	</delete>
+	
+</mapper>

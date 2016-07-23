@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.persistence.mapper.business.book.BookTypeMapper">
+	
+	<!-- 批量插入 -->
+	<insert id="creates" parameterType="list" >
+		INSERT INTO BOOK_TYPE (BOOK_TYPE_ID,BOOK_TYPE_NAME,BOOK_TYPE_PARENT_ID,
+			BOOK_TYPE_LEVEL,BOOK_TYPE SEQ,BOOK_TYPE_REMARK)
+		VALUES
+		<foreach collection="list" item="bky" index="index" separator=",">
+			(
+			 #{bky.bookTypeId,jdbcType=VARCHAR},
+			 #{bky.bookTypeName,jdbcType=VARCHAR},
+			 #{bky.bookTypeParentId,jdbcType=VARCHAR},
+			 #{bky.bookTypeLevel,jdbcType=INTEGER},
+			 #{bky.bookTypeSeq,jdbcType=VARCHAR},
+			 #{bky.bookTypeRemark,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+	
+	
+</mapper>

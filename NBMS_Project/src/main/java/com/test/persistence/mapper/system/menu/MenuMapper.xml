@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.test.persistence.mapper.system.menu.MenuMapper">
+
+	<!-- 批量插入 -->
+	<insert id="creates" parameterType="list">
+		INSERT INTO MENU(MENU_ID,MENU_PARENT_ID,MENU_NAME,MENU_URL,MENU_IS_VALID,MENU_LEVEL,
+						MENU_CREATE_TIME,MENU_USER_ID,MENU_REAMARK,MENU_SEQ)
+		VALUES
+		<foreach collection="list" item="menu" index="index" separator=",">
+			(#{menu.menuId,jdbcType=VARCHAR},
+			 #{menu.menuParentId,jdbcType=VARCHAR},
+			 #{menu.menuName,jdbcType=VARCHAR},
+			 #{menu.menuUrl,jdbcType=VARCHAR},
+			 #{menu.menuIsValid,jdbcType=VARCHAR},
+			 #{menu.menuLevel,jdbcType=INTEGER},
+			 #{menu.menuCreateTime,jdbcType=VARCHAR},
+			 #{menu.menuUserId,jdbcType=VARCHAR},
+			 #{menu.menuRemark,jdbcType=VARCHAR},
+			 #{menu.menuSeq,jdbcType=VARCHAR}
+			)
+		</foreach>
+	</insert>
+
+	
+
+</mapper>
